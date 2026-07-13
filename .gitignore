@@ -1,0 +1,128 @@
+# ============================================================
+# BSI — Bank Statement Intelligence
+# Git ignore rules
+# ============================================================
+
+
+# ------------------------------------------------------------
+# Python virtual environments
+# ------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+
+
+# ------------------------------------------------------------
+# Python-generated files
+# ------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+
+# ------------------------------------------------------------
+# Environment variables and secrets
+# Never commit API keys, passwords, tokens, or DB credentials.
+# ------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+
+# ------------------------------------------------------------
+# IDE and editor settings
+# ------------------------------------------------------------
+.vscode/
+.idea/
+*.code-workspace
+
+
+# ------------------------------------------------------------
+# macOS-generated files
+# ------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+__MACOSX/
+
+
+# ------------------------------------------------------------
+# Test and quality-tool caches
+# ------------------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.tox/
+.nox/
+
+
+# ------------------------------------------------------------
+# Python packaging and build output
+# ------------------------------------------------------------
+build/
+dist/
+*.egg-info/
+.eggs/
+
+
+# ------------------------------------------------------------
+# Application logs and temporary files
+# ------------------------------------------------------------
+logs/
+*.log
+tmp/
+temp/
+*.tmp
+*.swp
+
+
+# ------------------------------------------------------------
+# Generated financial reports and exports
+# These outputs can be recreated by the application.
+# ------------------------------------------------------------
+output/
+outputs/
+exports/
+reports/generated/
+
+
+# ------------------------------------------------------------
+# Uploaded financial and client documents
+# Do not commit real bank statements or confidential data.
+# ------------------------------------------------------------
+uploads/
+private_data/
+client_data/
+data/raw/
+data/private/
+
+
+# ------------------------------------------------------------
+# Local database files
+# PostgreSQL will be used in production, but local temporary
+# databases must also remain outside Git.
+# ------------------------------------------------------------
+*.db
+*.sqlite
+*.sqlite3
+
+
+# ------------------------------------------------------------
+# Local container and infrastructure overrides
+# ------------------------------------------------------------
+docker-compose.override.yml
+
+
+# ------------------------------------------------------------
+# Jupyter-generated files
+# ------------------------------------------------------------
+.ipynb_checkpoints/

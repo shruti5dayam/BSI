@@ -1,0 +1,259 @@
+# ============================================================
+# BSI — Bank Statement Intelligence
+# Python project, dependency, test, lint, and build configuration
+# ============================================================
+
+
+# ------------------------------------------------------------
+# Build system
+#
+# This tells Python packaging tools how the BSI package should
+# be built and installed.
+# ------------------------------------------------------------
+[build-system]
+requires = ["setuptools>=80.0"]
+build-backend = "setuptools.build_meta"
+
+
+# ------------------------------------------------------------
+# Project metadata
+#
+# The project name is used by package-management tools.
+# The Python import package remains:
+#
+#     import bsi
+# ------------------------------------------------------------
+[project]
+name = "bsi-financial-platform"
+version = "0.1.0"
+description = "Production-oriented bank statement intelligence and financial automation platform."
+readme = "README.md"
+requires-python = ">=3.13,<3.15"
+
+authors = [
+    { name = "Shruti Dayam" },
+]
+
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Typing :: Typed",
+]
+
+
+# ------------------------------------------------------------
+# Runtime dependencies
+#
+# These packages are required by the BSI backend and financial
+# processing application.
+#
+# Version strategy:
+# - Require a known modern minimum version.
+# - Allow compatible improvements inside the same major version.
+# - Prevent an automatic upgrade to a future breaking major version.
+# ------------------------------------------------------------
+dependencies = [
+    # FastAPI provides the REST API, request validation,
+    # OpenAPI documentation, and server tooling.
+    "fastapi[standard]>=0.139.0,<1.0.0",
+
+    # Pydantic Settings loads typed configuration from
+    # environment variables and .env files.
+    "pydantic-settings>=2.14.2,<3.0.0",
+
+    # Pandas supports tabular ingestion, transformation,
+    # aggregation, and report preparation.
+    "pandas>=3.0.3,<4.0.0",
+
+    # OpenPyXL reads and writes Excel .xlsx workbooks.
+    "openpyxl>=3.1,<4.0",
+
+    # SQLAlchemy provides database models, queries,
+    # sessions, transactions, and repository implementations.
+    "sqlalchemy>=2.0.51,<3.0.0",
+
+    # Alembic manages PostgreSQL database schema migrations.
+    "alembic>=1.18.5,<2.0.0",
+
+    # Psycopg is the PostgreSQL database driver.
+    # The binary extra simplifies local development installation.
+    "psycopg[binary]>=3.3.4,<4.0.0",
+]
+
+
+# ------------------------------------------------------------
+# Optional dependency groups
+#
+# Optional groups prevent the Streamlit frontend and development
+# tools from becoming mandatory dependencies for every production
+# backend installation.
+# ------------------------------------------------------------
+[project.optional-dependencies]
+
+# Streamlit is currently the BSI presentation layer.
+# It will call FastAPI rather than running authoritative
+# financial logic directly.
+ui = [
+    "streamlit>=1.59.2,<2.0.0",
+]
+
+# Development dependencies are used for tests, code quality,
+# type checking, API testing, and property-based testing.
+dev = [
+    "pytest>=8.4,<10.0",
+    "pytest-cov>=6.0,<8.0",
+    "pytest-asyncio>=1.0,<2.0",
+    "httpx>=0.28,<1.0",
+    "hypothesis>=6.130,<7.0",
+    "ruff>=0.12,<1.0",
+    "mypy>=1.16,<2.0",
+]
+
+
+# ------------------------------------------------------------
+# Project links
+# ------------------------------------------------------------
+[project.urls]
+Repository = "https://github.com/shruti5dayam/BSI"
+
+
+# ------------------------------------------------------------
+# Setuptools package discovery
+#
+# The BSI Python package lives under:
+#
+#     src/bsi/
+#
+# This is called the "src layout."
+# ------------------------------------------------------------
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["bsi*"]
+
+
+# ------------------------------------------------------------
+# Pytest configuration
+#
+# Pytest will search inside the tests directory for files
+# whose names begin with test_.
+# ------------------------------------------------------------
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+addopts = [
+    "-ra",
+    "--strict-config",
+    "--strict-markers",
+]
+
+markers = [
+    "unit: fast tests for isolated domain and application logic",
+    "integration: tests involving databases, APIs, or infrastructure",
+    "golden: financial regression tests using approved expected outputs",
+]
+
+
+# ------------------------------------------------------------
+# Coverage configuration
+#
+# Coverage measures how much production code is executed
+# by automated tests.
+# ------------------------------------------------------------
+[tool.coverage.run]
+branch = true
+source = ["bsi"]
+
+omit = [
+    "tests/*",
+]
+
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+precision = 2
+
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+
+
+# ------------------------------------------------------------
+# Ruff configuration
+#
+# Ruff checks code quality, imports, common bugs, naming,
+# unnecessary complexity, and formatting.
+# ------------------------------------------------------------
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+src = ["src", "tests"]
+
+
+[tool.ruff.lint]
+select = [
+    "E",    # Python style errors
+    "F",    # Pyflakes correctness checks
+    "I",    # Import ordering
+    "B",    # Common Python bug patterns
+    "UP",   # Modern Python syntax
+    "SIM",  # Simplification opportunities
+    "C4",   # Comprehension improvements
+    "RUF",  # Ruff-specific correctness checks
+]
+
+ignore = []
+
+
+[tool.ruff.lint.isort]
+known-first-party = ["bsi"]
+
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+docstring-code-format = true
+
+
+# ------------------------------------------------------------
+# Mypy configuration
+#
+# Mypy checks that values passed between functions match
+# the declared Python type hints.
+# ------------------------------------------------------------
+[tool.mypy]
+python_version = "3.13"
+mypy_path = "src"
+
+check_untyped_defs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+no_implicit_optional = true
+
+warn_return_any = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unreachable = true
+
+strict_equality = true
+show_error_codes = true
+pretty = true
+
+# Some third-party libraries may not provide complete type
+# information. Our own BSI code will still be checked strictly.
+ignore_missing_imports = true
